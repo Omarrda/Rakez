@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rakez - Distraction Vault</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="app-container">
+    
+    <aside class="sidebar">
+        <div class="logo-area">
+        <img src="rakezgreytransparentcropped.png" alt="Rakez Logo" class="custom-logo">
+        </div>
+
+        <nav class="nav-menu">
+            <a href="options.html" class="nav-item">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <a href="notebook.html" class="nav-item">
+                <i class="fa-solid fa-book-open"></i> Smart Notebook
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-chart-simple"></i> Analytics
+            </a>
+            <a href="#" class="nav-item active">
+                <i class="fa-solid fa-box-archive"></i> Distraction Vault
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-brain"></i> AI Quiz
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-file-export"></i> Export Notes
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="settings.html" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        
+        <header class="top-bar">
+            <div class="user-welcome">
+                <h1>Distraction Vault</h1>
+                <p>Links you've saved to check out later.</p>
+            </div>
+        </header>
+
+        <div id="vault-container" class="vault-list">
+            <!-- Distractions will be dynamically injected here -->
+        </div>
+
+    </main>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const vaultContainer = document.getElementById('vault-container');
+    let distractions = [];
+
+    function renderDistractions() {
+        vaultContainer.innerHTML = '';
+        if (distractions.length === 0) {
+            vaultContainer.innerHTML = '<p class="summary-text" style="text-align: center; margin-top: 40px;">Your vault is empty. When you save a distraction, it will appear here.</p>';
+            return;
+        }
+
+        distractions.forEach((url, index) => {
+            const vaultItem = document.createElement('div');
+            vaultItem.className = 'vault-item';
+            
+            vaultItem.innerHTML = `
+                <div class="vault-item-content">
+                    <i class="fa-solid fa-globe"></i>
+                    <a href="${url}" target="_blank">${url}</a>
+                </div>
+                <div class="vault-item-actions">
+                    <button class="icon-btn delete-btn" data-index="${index}" title="Delete">
+                        <i class="fa-solid fa-trash-alt"></i>
+                    </button>
+                </div>
+            `;
+            vaultContainer.appendChild(vaultItem);
+        });
+
+        // Add event listeners to the delete buttons
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const indexToDelete = parseInt(event.currentTarget.getAttribute('data-index'));
+                // Remove from the array
+                distractions.splice(indexToDelete, 1);
+                // Update storage
+                chrome.storage.local.set({ distractions: distractions }, () => {
+                    // Re-render the list
+                    renderDistractions();
+                });
+            });
+        });
+    }
+
+    // Load distractions from storage
+    chrome.storage.local.get({distractions: []}, (data) => {
+        distractions = data.distractions;
+        renderDistractions();
+    });
+});
+</script>
+
+</body>
+</html>

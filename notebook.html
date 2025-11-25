@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rakez - Smart Notebook</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="app-container">
+    
+    <aside class="sidebar">
+        <div class="logo-area">
+        <img src="rakezgreytransparentcropped.png" alt="Rakez Logo" class="custom-logo">
+        </div>
+
+        <nav class="nav-menu">
+            <a href="options.html" class="nav-item">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <a href="#" class="nav-item active">
+                <i class="fa-solid fa-book-open"></i> Smart Notebook
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-chart-simple"></i> Analytics
+            </a>
+            <a href="vault.html" class="nav-item">
+                <i class="fa-solid fa-box-archive"></i> Distraction Vault
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-brain"></i> AI Quiz
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-file-export"></i> Export Notes
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="settings.html" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        
+        <header class="top-bar">
+            <div class="user-welcome">
+                <h1>Smart Notebook</h1>
+                <p>Your unified timeline of notes and AI summaries.</p>
+            </div>
+            <div class="top-actions">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="search-notes" placeholder="Search notes...">
+                </div>
+                 <div class="filter-group">
+                    <label for="filter-type">Filter by:</label>
+                    <select id="filter-type" class="minimal-select">
+                        <option value="all">All</option>
+                        <option value="user_note">Manual Notes</option>
+                        <option value="ai_summary">AI Summaries</option>
+                        <option value="ai_definitions">AI Definitions</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <div id="notebook-container" class="notebook-timeline">
+            <!-- Notes will be dynamically injected here -->
+        </div>
+
+    </main>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const notebookContainer = document.getElementById('notebook-container');
+    const searchInput = document.getElementById('search-notes');
+    const filterSelect = document.getElementById('filter-type');
+    let allNotes = [];
+
+    function renderNotes(notesToRender) {
+        notebookContainer.innerHTML = '';
+        if (notesToRender.length === 0) {
+            notebookContainer.innerHTML = '<p class="summary-text" style="text-align: center; margin-top: 40px;">No notes found. Your saved notes and AI summaries will appear here.</p>';
+            return;
+        }
+        notesToRender.forEach(note => {
+            const noteCard = document.createElement('div');
+            noteCard.className = 'timeline-card';
+            
+            let iconClass = 'fa-solid fa-pencil';
+            let noteType = 'Manual Note';
+            if (note.type === 'ai_summary') {
+                iconClass = 'fa-solid fa-robot';
+                noteType = 'AI Summary';
+            } else if (note.type === 'ai_definitions') {
+                iconClass = 'fa-solid fa-book';
+                noteType = 'AI Definitions';
+            }
+
+            noteCard.innerHTML = `
+                <div class="timeline-icon">
+                    <i class="${iconClass}"></i>
+                </div>
+                <div class="card-header">
+                    <h3>${noteType}</h3>
+                    <span class="timestamp">${new Date(note.timestamp).toLocaleString()}</span>
+                </div>
+                <div class="card-body">
+                    <p class="summary-text">${note.content}</p>
+                </div>
+                <div class="card-footer">
+                    <i class="fa-solid fa-link"></i>
+                    <a href="${note.source.url}" target="_blank">${note.source.title}</a>
+                </div>
+            `;
+            notebookContainer.appendChild(noteCard);
+        });
+    }
+
+    function filterAndSearch() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filterType = filterSelect.value;
+        
+        const filteredNotes = allNotes.filter(note => {
+            const matchesType = filterType === 'all' || note.type === filterType;
+            const matchesSearch = note.content.toLowerCase().includes(searchTerm) || 
+                                  note.source.title.toLowerCase().includes(searchTerm);
+            return matchesType && matchesSearch;
+        });
+
+        renderNotes(filteredNotes);
+    }
+
+    // Load all notes from storage
+    chrome.storage.local.get({notes: []}, (data) => {
+        allNotes = data.notes.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // Sort newest first
+        renderNotes(allNotes);
+    });
+    
+    searchInput.addEventListener('input', filterAndSearch);
+    filterSelect.addEventListener('change', filterAndSearch);
+});
+</script>
+
+</body>
+</html>

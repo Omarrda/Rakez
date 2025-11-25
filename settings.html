@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rakez - Settings</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="app-container">
+    
+    <aside class="sidebar">
+        <div class="logo-area">
+        <img src="rakezgreytransparentcropped.png" alt="Rakez Logo" class="custom-logo">
+        </div>
+
+        <nav class="nav-menu">
+            <a href="options.html" class="nav-item">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <a href="notebook.html" class="nav-item">
+                <i class="fa-solid fa-book-open"></i> Smart Notebook
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-chart-simple"></i> Analytics
+            </a>
+            <a href="vault.html" class="nav-item">
+                <i class="fa-solid fa-box-archive"></i> Distraction Vault
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-brain"></i> AI Quiz
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-file-export"></i> Export Notes
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="#" class="nav-item active"><i class="fa-solid fa-gear"></i> Settings</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        
+        <header class="top-bar">
+            <div class="user-welcome">
+                <h1>Settings</h1>
+                <p>Manage your Rakez preferences and API keys.</p>
+            </div>
+        </header>
+
+        <section class="intention-container">
+            <label><i class="fa-solid fa-key"></i> Gemini API Key</label>
+            <p class="summary-text" style="margin-bottom: 15px;">
+                Your API key is stored securely using `chrome.storage.sync` and is never shared. 
+                You can get your own key from Google AI Studio.
+            </p>
+            <div class="input-group">
+                <input id="api-key-input" type="password" placeholder="Enter your Gemini API Key">
+                <button id="save-api-key-btn" class="btn-primary">Save Key</button>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const apiKeyInput = document.getElementById('api-key-input');
+    const saveApiKeyBtn = document.getElementById('save-api-key-btn');
+
+    // Load the key from storage and populate the input
+    chrome.storage.sync.get('geminiApiKey', (data) => {
+        if (data.geminiApiKey) {
+            apiKeyInput.value = data.geminiApiKey;
+        }
+    });
+
+    // Save the new key to storage
+    saveApiKeyBtn.addEventListener('click', () => {
+        const newApiKey = apiKeyInput.value.trim();
+        if (newApiKey) {
+            chrome.storage.sync.set({ geminiApiKey: newApiKey }, () => {
+                saveApiKeyBtn.textContent = 'Saved!';
+                setTimeout(() => {
+                    saveApiKeyBtn.textContent = 'Save Key';
+                }, 2000);
+            });
+        }
+    });
+});
+</script>
+
+</body>
+</html>

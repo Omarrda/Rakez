@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="dashboard.css">
+    <style> body { width: 300px; padding: 15px; } </style>
+</head>
+<body>
+    <header>
+        <h3>Rakez Coach</h3>
+        <span class="tag">On Task</span>
+    </header>
+    <div class="card">
+        <p>Current Goal:</p>
+        <h2 id="goal-display">Loading...</h2>
+    </div>
+    <button id="open-dash" class="btn-primary">Open Full Dashboard</button>
+    <script>
+        // --- Open Dashboard ---
+        document.getElementById('open-dash').addEventListener('click', () => {
+            chrome.runtime.openOptionsPage();
+        });
+
+        // --- Load Goal ---
+        document.addEventListener('DOMContentLoaded', () => {
+            chrome.storage.local.get('goal', (data) => {
+                const goalDisplay = document.getElementById('goal-display');
+                if (data.goal) {
+                    goalDisplay.textContent = data.goal;
+                } else {
+                    goalDisplay.textContent = 'No goal set.';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

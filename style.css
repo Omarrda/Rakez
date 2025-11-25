@@ -1,0 +1,209 @@
+#rakez-assistant-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #1A222E;
+    color: #2A9D8F;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    font-size: 1.5rem;
+    z-index: 9998;
+    transition: transform 0.2s;
+}
+
+#rakez-assistant-button:hover {
+    transform: scale(1.1);
+}
+
+#rakez-assistant-sidebar {
+    position: fixed;
+    top: 0;
+    right: -350px; /* Hidden by default */
+    width: 350px;
+    height: 100%;
+    border: none;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.15);
+    z-index: 9999;
+    transition: right 0.3s ease-in-out;
+}
+
+#rakez-assistant-sidebar.visible {
+    right: 0; /* Slides in */
+}
+
+/* --- Study Sidecar --- */
+#rakez-sidecar-button {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 60px;
+    background-color: #1A222E;
+    color: #2A9D8F;
+    border: none;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    cursor: pointer;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    font-size: 1.2rem;
+    z-index: 9997;
+}
+
+#rakez-sidecar-panel {
+    position: fixed;
+    top: 0;
+    left: -400px; /* Hidden by default */
+    width: 400px;
+    height: 100%;
+    background-color: #F4F6F8;
+    border-right: 1px solid #E2E8F0;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    transition: left 0.3s ease-in-out;
+}
+
+#rakez-sidecar-panel.visible {
+    left: 0;
+}
+
+.sidecar-header {
+    padding: 20px;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.sidecar-header h3 {
+    margin: 0;
+    color: #1D3557;
+    font-size: 1rem;
+}
+
+#rakez-sidecar-textarea {
+    flex: 1;
+    padding: 20px;
+    border: none;
+    outline: none;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    resize: none;
+    background-color: #FFFFFF;
+}
+
+.sidecar-footer {
+    padding: 15px;
+    background-color: #FFFFFF;
+    border-top: 1px solid #E2E8F0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.sidecar-footer button {
+    background-color: #2A9D8F;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* --- Gentle Nudge --- */
+#rakez-nudge-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(26, 34, 46, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10001;
+    backdrop-filter: blur(5px);
+}
+
+.rakez-nudge-box {
+    background-color: white;
+    width: 450px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    text-align: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.rakez-nudge-header {
+    background-color: #F8FAFC;
+    padding: 15px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.rakez-nudge-header img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.rakez-nudge-header h3 {
+    display: inline;
+    color: #1D3557;
+    font-size: 1rem;
+    vertical-align: middle;
+}
+
+.rakez-nudge-content {
+    padding: 30px;
+}
+
+.rakez-nudge-content h4 {
+    color: #1D3557;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+.rakez-nudge-content p {
+    color: #4A5568;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.rakez-nudge-buttons {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn-primary-nudge, .btn-secondary-nudge {
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s;
+}
+
+.btn-primary-nudge {
+    background-color: #2A9D8F;
+    color: white;
+}
+
+.btn-secondary-nudge {
+    background-color: #E2E8F0;
+    color: #4A5568;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
