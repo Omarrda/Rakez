@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rakez - AI Quiz</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .quiz-box { padding: 40px; max-width: 800px; margin: 0 auto; }
+        .quiz-result { background: #F1F5F9; padding: 20px; border-radius: 8px; margin-top: 20px; white-space: pre-wrap; line-height: 1.6;}
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #2A9D8F; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="logo-area">
+        <img src="rakezgreytransparentcropped.png" alt="Rakez Logo" class="custom-logo">
+        </div>
+        <nav class="nav-menu">
+            <a href="options.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a href="notebook.html" class="nav-item"><i class="fa-solid fa-book-open"></i> Smart Notebook</a>
+            <a href="analytics.html" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Analytics</a>
+            <a href="vault.html" class="nav-item"><i class="fa-solid fa-box-archive"></i> Distraction Vault</a>
+            <a href="quiz.html" class="nav-item active"><i class="fa-solid fa-brain"></i> AI Quiz</a>
+            <a href="export.html" class="nav-item"><i class="fa-solid fa-file-export"></i> Export Notes</a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="settings.html" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <div class="user-welcome">
+                <h1>AI Quiz Generator</h1>
+                <p>Active recall based on your actual notes.</p>
+            </div>
+        </header>
+
+        <div class="card quiz-box">
+            <div style="text-align: center;">
+                <i class="fa-solid fa-brain" style="font-size: 3rem; color: #2A9D8F; margin-bottom: 20px;"></i>
+                <h2>Ready to test your knowledge?</h2>
+                <p class="summary-text">Rakez will scan your last 10 notes and summaries to generate a unique quiz.</p>
+                <br>
+                <button id="start-quiz-btn" class="btn-primary" style="padding: 15px 40px; font-size: 1.1rem;">Generate Quiz</button>
+            </div>
+            
+            <div id="loader" class="loader"></div>
+            <div id="quiz-output" class="quiz-result" style="display: none;"></div>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.getElementById('start-quiz-btn').addEventListener('click', () => {
+        const btn = document.getElementById('start-quiz-btn');
+        const loader = document.getElementById('loader');
+        const output = document.getElementById('quiz-output');
+
+        btn.style.display = 'none';
+        loader.style.display = 'block';
+        output.style.display = 'none';
+
+        chrome.runtime.sendMessage({ action: 'generateComprehensiveQuiz' }, (response) => {
+            loader.style.display = 'none';
+            output.style.display = 'block';
+            if (response && response.quiz) {
+                // Formatting basic markdown-like response to HTML
+                output.innerHTML = response.quiz.replace(/\n/g, '<br>');
+                // Add a reset button
+                const resetBtn = document.createElement('button');
+                resetBtn.className = 'btn-primary';
+                resetBtn.style.marginTop = '20px';
+                resetBtn.textContent = 'Take Another';
+                resetBtn.onclick = () => location.reload();
+                output.appendChild(resetBtn);
+            } else {
+                output.textContent = "Could not generate quiz. Make sure you have notes in your notebook!";
+                btn.style.display = 'inline-block';
+            }
+        });
+    });
+</script>
+</body>
+</html>

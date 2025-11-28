@@ -10,52 +10,34 @@
 <body>
 
 <div class="app-container">
-    
     <aside class="sidebar">
         <div class="logo-area">
         <img src="rakezgreytransparentcropped.png" alt="Rakez Logo" class="custom-logo">
         </div>
-
         <nav class="nav-menu">
-            <a href="#" class="nav-item active">
-                <i class="fa-solid fa-house"></i> Dashboard
-            </a>
-            <a href="notebook.html" class="nav-item">
-                <i class="fa-solid fa-book-open"></i> Smart Notebook
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fa-solid fa-chart-simple"></i> Analytics
-            </a>
-            <a href="vault.html" class="nav-item">
-                <i class="fa-solid fa-box-archive"></i> Distraction Vault
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fa-solid fa-brain"></i> AI Quiz
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fa-solid fa-file-export"></i> Export Notes
-            </a>
+            <a href="options.html" class="nav-item active"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a href="notebook.html" class="nav-item"><i class="fa-solid fa-book-open"></i> Smart Notebook</a>
+            <a href="analytics.html" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Analytics</a>
+            <a href="vault.html" class="nav-item"><i class="fa-solid fa-box-archive"></i> Distraction Vault</a>
+            <a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> AI Quiz</a>
+            <a href="export.html" class="nav-item"><i class="fa-solid fa-file-export"></i> Export Notes</a>
         </nav>
-
         <div class="sidebar-footer">
             <a href="settings.html" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
+            <!-- Added ID for Logout Logic -->
+            <a href="#" id="logout-btn" class="nav-item"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
         </div>
     </aside>
 
     <main class="main-content">
-        
         <header class="top-bar">
             <div class="user-welcome">
-                <h1>Good Morning Omar,</h1>
+                <h1>Good Morning <span id="user-name-display">User</span>,</h1>
                 <p>Ready to get back on track?</p>
             </div>
             <div class="top-actions">
-                <div class="search-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Search summaries...">
-                </div>
-                <div class="profile-pic">OD</div>
+                <!-- Profile Pic Container -->
+                <div class="profile-pic" id="dashboard-profile-pic">OD</div>
             </div>
         </header>
 
@@ -68,46 +50,29 @@
         </section>
 
         <div class="dashboard-grid">
-            
             <div class="card notebook-card">
                 <div class="card-header">
                     <h3>Recent Notes</h3>
-                    <button class="icon-btn"><i class="fa-solid fa-ellipsis"></i></button>
+                    <a href="notebook.html" class="icon-btn"><i class="fa-solid fa-arrow-right"></i></a>
                 </div>
                 <div id="recent-notes-container" class="card-body scrollable">
-                    <!-- Notes will be dynamically injected here -->
+                    <!-- Notes injected here -->
                 </div>
             </div>
 
             <div class="card analytics-card">
                 <div class="card-header">
                     <h3>Focus Activity</h3>
-                    <select class="minimal-select"><option>This Week</option></select>
                 </div>
                 <div class="chart-wrapper">
-                    <div class="y-axis">
-                        <span>High</span>
-                        <span>Med</span>
-                        <span>Low</span>
-                    </div>
                     <div class="bars-container">
                         <div class="bar" style="height: 40%;" title="Mon"></div>
                         <div class="bar" style="height: 70%;" title="Tue"></div>
-                        <div class="bar active-bar" style="height: 90%;" title="Wed"></div>
-                        <div class="bar" style="height: 60%;" title="Thu"></div>
-                        <div class="bar" style="height: 50%;" title="Fri"></div>
-                        <div class="bar" style="height: 30%;" title="Sat"></div>
-                        <div class="bar" style="height: 20%;" title="Sun"></div>
+                        <div class="bar active-bar" style="height: 90%;" title="Today"></div>
                     </div>
-                    <div class="x-axis">
-                        <span>Mon</span>
-                        <span>Tue</span>
-                        <span>Wed</span>
-                        <span>Thu</span>
-                        <span>Fri</span>
-                        <span>Sat</span>
-                        <span>Sun</span>
-                    </div>
+                </div>
+                <div style="text-align:center; margin-top: 10px;">
+                    <a href="analytics.html" class="link-arrow" style="font-size: 0.9rem; color: #30abb0; text-decoration: none;">View Full Analytics</a>
                 </div>
             </div>
 
@@ -116,90 +81,188 @@
                     <h3>Distraction Vault</h3>
                     <a href="vault.html" class="link-arrow">View All <i class="fa-solid fa-arrow-right"></i></a>
                 </div>
-                <div class="distraction-list">
-                    <div class="distraction-item">
-                        <img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Video thumbnail">
-                        <div class="item-info">
-                            <p>Video Title Example</p>
-                            <span>youtube.com</span>
-                        </div>
-                    </div>
-                     <div class="distraction-item">
-                        <img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Video thumbnail">
-                        <div class="item-info">
-                            <p>Another Video Title</p>
-                            <span>youtube.com</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card quiz-card">
-                <div class="card-header">
-                    <h3>AI Quick Quiz</h3>
-                     <button class="icon-btn"><i class="fa-solid fa-arrows-rotate"></i></button>
-                </div>
-                <div class="quiz-body">
-                    <p class="question">What is the primary function of a firewall in a computer network?</p>
-                    <div class="options">
-                        <button class="option-btn">A. To block unauthorized access</button>
-                        <button class="option-btn">B. To increase internet speed</button>
-                        <button class="option-btn">C. To store user passwords</button>
-                    </div>
+                <div class="distraction-list" id="dashboard-vault-list">
+                    <!-- Vault items injected here -->
                 </div>
             </div>
         </div>
     </main>
 </div>
 
+<!-- SCRIPTS -->
 <script>
-    const goalInput = document.getElementById('goal-input');
-    const updateGoalBtn = document.getElementById('update-goal-btn');
+    // --- UTILS (Embedded for reliability) ---
+    /**
+     * Generates a unique color based on the name string.
+     */
+    function getAvatarColor(name) {
+        const colors = [
+            '#2A9D8F', // Teal
+            '#E76F51', // Burnt Orange
+            '#264653', // Dark Blue
+            '#E9C46A', // Gold
+            '#F4A261', // Orange
+            '#457B9D', // Steel Blue
+            '#D62828', // Red
+            '#1D3557', // Navy
+        ];
+        const charCode = name ? name.charCodeAt(0) : 0;
+        return colors[charCode % colors.length];
+    }
 
-    // Load the current goal from storage
-    document.addEventListener('DOMContentLoaded', () => {
-        chrome.storage.local.get('goal', (data) => {
-            if (data.goal) {
-                goalInput.value = data.goal;
+    /**
+     * Renders the avatar into a specific HTML element.
+     */
+    function renderAvatar(element, name, avatarBase64) {
+        if (avatarBase64) {
+            // Render Image
+            element.innerHTML = `<img src="${avatarBase64}" style="width:100%; height:100%; object-fit:cover;" alt="Avatar">`;
+            element.style.backgroundColor = 'transparent';
+            element.textContent = ''; 
+        } else {
+            // Render Initials with Unique Color
+            const validName = name || "User";
+            const initials = validName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            
+            element.innerHTML = ''; 
+            element.textContent = initials;
+            element.style.backgroundColor = getAvatarColor(validName);
+            element.style.color = '#FFFFFF';
+            // Ensure flex centering is applied
+            element.style.display = 'flex';
+            element.style.alignItems = 'center';
+            element.style.justifyContent = 'center';
+        }
+    }
+
+    // --- AUTH (Embedded for reliability) ---
+    async function logoutUser() {
+        return new Promise((resolve) => {
+            // Save current active data back to the specific user's slot in DB before clearing
+            chrome.storage.local.get(['currentUser', 'userProfile', 'notes', 'goal', 'distractions', 'users_db'], (data) => {
+                if (!data.currentUser) { resolve(); return; }
+
+                const db = data.users_db || {};
+                const email = data.currentUser.email;
+
+                // Update the DB with the latest session data
+                if (db[email]) {
+                    db[email].profile = data.userProfile;
+                    db[email].data = {
+                        notes: data.notes || [],
+                        goal: data.goal || "",
+                        distractions: data.distractions || []
+                    };
+                }
+
+                // Clear active session
+                chrome.storage.local.set({
+                    users_db: db,
+                    currentUser: null,
+                    userProfile: { name: "Guest", avatar: null },
+                    notes: [],
+                    goal: "",
+                    distractions: []
+                }, () => {
+                    resolve();
+                });
+            });
+        });
+    }
+
+    function requireAuth() {
+        if (typeof chrome === 'undefined' || !chrome.storage) {
+            console.warn("Chrome storage API not available. Skipping auth check.");
+            return;
+        }
+        chrome.storage.local.get('currentUser', (data) => {
+            if (!data.currentUser) {
+                window.location.href = 'auth.html';
             }
         });
+    }
+
+    // --- MAIN DASHBOARD LOGIC ---
+    const goalInput = document.getElementById('goal-input');
+    const updateGoalBtn = document.getElementById('update-goal-btn');
+    const nameDisplay = document.getElementById('user-name-display');
+    const profilePic = document.getElementById('dashboard-profile-pic');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Check Login Status
+        requireAuth();
+
+        // 2. Load User Profile with Utils
+        if (typeof chrome !== 'undefined' && chrome.storage) {
+            chrome.storage.local.get('userProfile', (data) => {
+                const profile = data.userProfile || { name: 'User', avatar: null };
+                nameDisplay.textContent = profile.name.split(' ')[0]; 
+                
+                // Helper function from utils (embedded above)
+                renderAvatar(profilePic, profile.name, profile.avatar);
+            });
+
+            // 4. Load Goal
+            chrome.storage.local.get('goal', (data) => {
+                if (data.goal) goalInput.value = data.goal;
+            });
+
+            // 5. Load Recent Notes
+            const recentNotesContainer = document.getElementById('recent-notes-container');
+            chrome.storage.local.get({notes: []}, (data) => {
+                const notes = data.notes.slice(-3).reverse(); 
+                if (notes.length === 0) {
+                    recentNotesContainer.innerHTML = '<p class="summary-text" style="text-align: center; margin-top: 20px;">No notes yet.</p>';
+                    return;
+                }
+                notes.forEach(note => {
+                    const noteItem = document.createElement('div');
+                    noteItem.className = 'note-item';
+                    noteItem.innerHTML = `
+                        <span class="tag-pill">${note.type.replace('user_', '').replace('ai_', '')}</span>
+                        <h4>${note.source.title.substring(0, 30)}...</h4>
+                        <p class="summary-text">${note.content.substring(0, 60)}...</p>
+                    `;
+                    recentNotesContainer.appendChild(noteItem);
+                });
+            });
+            
+            // 6. Load Vault Preview
+            const vaultList = document.getElementById('dashboard-vault-list');
+            chrome.storage.local.get({distractions: []}, (data) => {
+                 const items = data.distractions.slice(-2);
+                 items.forEach(url => {
+                     const item = document.createElement('div');
+                     item.className = 'distraction-item';
+                     item.innerHTML = `
+                        <div class="item-info">
+                            <p>${url.substring(0, 30)}...</p>
+                        </div>`;
+                     vaultList.appendChild(item);
+                 });
+            });
+        }
+
+        // 3. Logout Handler
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                await logoutUser();
+                window.location.href = 'auth.html';
+            });
+        }
     });
 
-    // Save the new goal to storage
     updateGoalBtn.addEventListener('click', () => {
         const newGoal = goalInput.value.trim();
         if (newGoal) {
             chrome.storage.local.set({ goal: newGoal }, () => {
                 updateGoalBtn.textContent = 'Saved!';
-                setTimeout(() => {
-                    updateGoalBtn.textContent = 'Update Goal';
-                }, 2000);
+                setTimeout(() => { updateGoalBtn.textContent = 'Update Goal'; }, 2000);
             });
         }
     });
-
-    // Load recent notes
-    document.addEventListener('DOMContentLoaded', () => {
-        const recentNotesContainer = document.getElementById('recent-notes-container');
-        chrome.storage.local.get({notes: []}, (data) => {
-            const notes = data.notes.slice(-5).reverse(); // Get the last 5 notes
-            if (notes.length === 0) {
-                recentNotesContainer.innerHTML = '<p class="summary-text" style="text-align: center; margin-top: 20px;">No notes yet. Start studying to see your notes here!</p>';
-                return;
-            }
-            notes.forEach(note => {
-                const noteItem = document.createElement('div');
-                noteItem.className = 'note-item';
-                noteItem.innerHTML = `
-                    <span class="tag-pill">${note.source.title}</span>
-                    <h4>Note from ${new Date(note.timestamp).toLocaleDateString()}</h4>
-                    <p class="summary-text">${note.content.substring(0, 100)}...</p>
-                `;
-                recentNotesContainer.appendChild(noteItem);
-            });
-        });
-    });
 </script>
-
 </body>
 </html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rakez - Export Notes</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="logo-area">
+        <img src="rakezgreytransparentcropped.png" alt="Rakez Logo" class="custom-logo">
+        </div>
+        <nav class="nav-menu">
+            <a href="options.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a href="notebook.html" class="nav-item"><i class="fa-solid fa-book-open"></i> Smart Notebook</a>
+            <a href="analytics.html" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Analytics</a>
+            <a href="vault.html" class="nav-item"><i class="fa-solid fa-box-archive"></i> Distraction Vault</a>
+            <a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> AI Quiz</a>
+            <a href="export.html" class="nav-item active"><i class="fa-solid fa-file-export"></i> Export Notes</a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="settings.html" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <div class="user-welcome">
+                <h1>Export Data</h1>
+                <p>Take your knowledge with you.</p>
+            </div>
+        </header>
+
+        <div class="card" style="padding: 40px; text-align: center; max-width: 600px; margin: 0 auto;">
+            <i class="fa-solid fa-file-arrow-down" style="font-size: 3rem; color: #2A9D8F; margin-bottom: 20px;"></i>
+            <h3>Export to Markdown</h3>
+            <p class="summary-text">Download a clean `.md` file containing all your manual notes, AI summaries, and definitions. Compatible with Obsidian, Notion, and GitHub.</p>
+            <br>
+            <button id="export-btn" class="btn-primary">Download Notebook</button>
+            <p id="export-status" style="margin-top: 15px; color: #2A9D8F; font-size: 0.9rem;"></p>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.getElementById('export-btn').addEventListener('click', () => {
+        chrome.storage.local.get({notes: []}, (data) => {
+            const notes = data.notes;
+            if (notes.length === 0) {
+                document.getElementById('export-status').textContent = "No notes to export!";
+                return;
+            }
+
+            let fileContent = "# My Rakez Smart Notebook\n\n";
+            fileContent += `Exported on: ${new Date().toLocaleDateString()}\n\n---\n\n`;
+
+            notes.forEach(note => {
+                fileContent += `## ${new Date(note.timestamp).toLocaleString()} - ${note.type.replace('user_', '').replace('ai_', '').toUpperCase()}\n`;
+                fileContent += `**Source:** [${note.source.title}](${note.source.url})\n\n`;
+                fileContent += `${note.content}\n\n`;
+                fileContent += `---\n\n`;
+            });
+
+            const blob = new Blob([fileContent], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `rakez_notebook_${new Date().toISOString().slice(0,10)}.md`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            document.getElementById('export-status').textContent = "Export started!";
+        });
+    });
+</script>
+</body>
+</html>

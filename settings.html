@@ -17,29 +17,17 @@
         </div>
 
         <nav class="nav-menu">
-            <a href="options.html" class="nav-item">
-                <i class="fa-solid fa-house"></i> Dashboard
-            </a>
-            <a href="notebook.html" class="nav-item">
-                <i class="fa-solid fa-book-open"></i> Smart Notebook
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fa-solid fa-chart-simple"></i> Analytics
-            </a>
-            <a href="vault.html" class="nav-item">
-                <i class="fa-solid fa-box-archive"></i> Distraction Vault
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fa-solid fa-brain"></i> AI Quiz
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fa-solid fa-file-export"></i> Export Notes
-            </a>
+            <a href="options.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a href="notebook.html" class="nav-item"><i class="fa-solid fa-book-open"></i> Smart Notebook</a>
+            <a href="analytics.html" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Analytics</a>
+            <a href="vault.html" class="nav-item"><i class="fa-solid fa-box-archive"></i> Distraction Vault</a>
+            <a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> AI Quiz</a>
+            <a href="export.html" class="nav-item"><i class="fa-solid fa-file-export"></i> Export Notes</a>
         </nav>
 
         <div class="sidebar-footer">
             <a href="#" class="nav-item active"><i class="fa-solid fa-gear"></i> Settings</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
+            <a href="#" id="logout-btn" class="nav-item"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</a>
         </div>
     </aside>
 
@@ -47,16 +35,39 @@
         
         <header class="top-bar">
             <div class="user-welcome">
-                <h1>Settings</h1>
-                <p>Manage your Rakez preferences and API keys.</p>
+                <h1>Account Settings</h1>
+                <p>Manage your profile and API keys.</p>
+            </div>
+            <div class="top-actions">
+                 <div class="profile-pic" id="header-profile-pic">OD</div>
             </div>
         </header>
 
+        <!-- User Profile Section -->
+        <section class="intention-container">
+            <label><i class="fa-solid fa-user"></i> User Profile</label>
+            
+            <div class="profile-upload-area">
+                <div class="profile-preview-large" id="profile-preview">OD</div>
+                <div class="upload-btn-wrapper">
+                    <button class="btn-primary" style="background-color: #E2E8F0; color: #1A222E;">Change Photo</button>
+                    <input type="file" id="file-upload" accept="image/*">
+                </div>
+            </div>
+
+            <label>Display Name</label>
+            <div class="input-group" style="margin-bottom: 20px;">
+                <input id="display-name" type="text" placeholder="Enter your name">
+            </div>
+
+            <button id="save-profile-btn" class="btn-primary">Save Profile</button>
+        </section>
+
+        <!-- API Key Section -->
         <section class="intention-container">
             <label><i class="fa-solid fa-key"></i> Gemini API Key</label>
             <p class="summary-text" style="margin-bottom: 15px;">
-                Your API key is stored securely using `chrome.storage.sync` and is never shared. 
-                You can get your own key from Google AI Studio.
+                Your API key is stored securely using `chrome.storage.sync`.
             </p>
             <div class="input-group">
                 <input id="api-key-input" type="password" placeholder="Enter your Gemini API Key">
@@ -67,31 +78,191 @@
     </main>
 </div>
 
+<!-- SCRIPTS -->
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const apiKeyInput = document.getElementById('api-key-input');
-    const saveApiKeyBtn = document.getElementById('save-api-key-btn');
+    // --- UTILS (Embedded for reliability) ---
+    /**
+     * Generates a unique color based on the name string.
+     */
+    function getAvatarColor(name) {
+        const colors = [
+            '#2A9D8F', // Teal
+            '#E76F51', // Burnt Orange
+            '#264653', // Dark Blue
+            '#E9C46A', // Gold
+            '#F4A261', // Orange
+            '#457B9D', // Steel Blue
+            '#D62828', // Red
+            '#1D3557', // Navy
+        ];
+        const charCode = name ? name.charCodeAt(0) : 0;
+        return colors[charCode % colors.length];
+    }
 
-    // Load the key from storage and populate the input
-    chrome.storage.sync.get('geminiApiKey', (data) => {
-        if (data.geminiApiKey) {
-            apiKeyInput.value = data.geminiApiKey;
+    /**
+     * Renders the avatar into a specific HTML element.
+     */
+    function renderAvatar(element, name, avatarBase64) {
+        if (avatarBase64) {
+            // Render Image
+            element.innerHTML = `<img src="${avatarBase64}" style="width:100%; height:100%; object-fit:cover;" alt="Avatar">`;
+            element.style.backgroundColor = 'transparent';
+            element.textContent = ''; 
+        } else {
+            // Render Initials with Unique Color
+            const validName = name || "User";
+            const initials = validName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            
+            element.innerHTML = ''; 
+            element.textContent = initials;
+            element.style.backgroundColor = getAvatarColor(validName);
+            element.style.color = '#FFFFFF';
+            // Ensure flex centering is applied
+            element.style.display = 'flex';
+            element.style.alignItems = 'center';
+            element.style.justifyContent = 'center';
         }
-    });
+    }
 
-    // Save the new key to storage
-    saveApiKeyBtn.addEventListener('click', () => {
-        const newApiKey = apiKeyInput.value.trim();
-        if (newApiKey) {
-            chrome.storage.sync.set({ geminiApiKey: newApiKey }, () => {
-                saveApiKeyBtn.textContent = 'Saved!';
-                setTimeout(() => {
-                    saveApiKeyBtn.textContent = 'Save Key';
-                }, 2000);
+    // --- AUTH (Embedded for reliability) ---
+    async function logoutUser() {
+        return new Promise((resolve) => {
+            // Save current active data back to the specific user's slot in DB before clearing
+            chrome.storage.local.get(['currentUser', 'userProfile', 'notes', 'goal', 'distractions', 'users_db'], (data) => {
+                if (!data.currentUser) { resolve(); return; }
+
+                const db = data.users_db || {};
+                const email = data.currentUser.email;
+
+                // Update the DB with the latest session data
+                if (db[email]) {
+                    db[email].profile = data.userProfile;
+                    db[email].data = {
+                        notes: data.notes || [],
+                        goal: data.goal || "",
+                        distractions: data.distractions || []
+                    };
+                }
+
+                // Clear active session
+                chrome.storage.local.set({
+                    users_db: db,
+                    currentUser: null,
+                    userProfile: { name: "Guest", avatar: null },
+                    notes: [],
+                    goal: "",
+                    distractions: []
+                }, () => {
+                    resolve();
+                });
+            });
+        });
+    }
+
+    function requireAuth() {
+        if (typeof chrome === 'undefined' || !chrome.storage) {
+            console.warn("Chrome storage API not available. Skipping auth check.");
+            return;
+        }
+        chrome.storage.local.get('currentUser', (data) => {
+            if (!data.currentUser) {
+                window.location.href = 'auth.html';
+            }
+        });
+    }
+
+    // --- MAIN SETTINGS LOGIC ---
+    document.addEventListener('DOMContentLoaded', () => {
+        requireAuth(); // 1. Check Login
+
+        const nameInput = document.getElementById('display-name');
+        const fileInput = document.getElementById('file-upload');
+        const profilePreview = document.getElementById('profile-preview');
+        const headerProfile = document.getElementById('header-profile-pic');
+        const saveProfileBtn = document.getElementById('save-profile-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const apiKeyInput = document.getElementById('api-key-input');
+        const saveApiKeyBtn = document.getElementById('save-api-key-btn');
+
+        let currentAvatarBase64 = null;
+
+        // 2. Load Profile
+        if (typeof chrome !== 'undefined' && chrome.storage) {
+            chrome.storage.local.get('userProfile', (data) => {
+                const profile = data.userProfile || { name: 'Rakez User', avatar: null };
+                
+                nameInput.value = profile.name;
+                currentAvatarBase64 = profile.avatar;
+                
+                // Use Utils to Render
+                renderAvatar(profilePreview, profile.name, profile.avatar);
+                renderAvatar(headerProfile, profile.name, profile.avatar);
+            });
+
+            // 6. API Key Logic
+            if (chrome.storage.sync) {
+                chrome.storage.sync.get('geminiApiKey', (data) => {
+                    if (data.geminiApiKey) apiKeyInput.value = data.geminiApiKey;
+                });
+            }
+        }
+
+        // 3. Logout
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                await logoutUser();
+                window.location.href = 'auth.html';
             });
         }
+
+        // 4. Handle Image Upload
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (file.size > 1024 * 1024) { 
+                alert("Image is too large. Please choose an image under 1MB.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                currentAvatarBase64 = reader.result;
+                // Immediate Preview
+                renderAvatar(profilePreview, nameInput.value, currentAvatarBase64);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // 5. Save Profile
+        saveProfileBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim() || "User";
+            
+            const newProfile = {
+                name: name,
+                avatar: currentAvatarBase64
+            };
+
+            if (typeof chrome !== 'undefined' && chrome.storage) {
+                chrome.storage.local.set({ userProfile: newProfile }, () => {
+                    renderAvatar(headerProfile, newProfile.name, newProfile.avatar);
+                    saveProfileBtn.textContent = 'Saved!';
+                    setTimeout(() => { saveProfileBtn.textContent = 'Save Profile'; }, 2000);
+                });
+            }
+        });
+
+        saveApiKeyBtn.addEventListener('click', () => {
+            const newApiKey = apiKeyInput.value.trim();
+            if (newApiKey && typeof chrome !== 'undefined' && chrome.storage && chrome.storage.sync) {
+                chrome.storage.sync.set({ geminiApiKey: newApiKey }, () => {
+                    saveApiKeyBtn.textContent = 'Saved!';
+                    setTimeout(() => { saveApiKeyBtn.textContent = 'Save Key'; }, 2000);
+                });
+            }
+        });
     });
-});
 </script>
 
 </body>
