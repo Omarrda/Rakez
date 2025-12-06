@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rakez - Login</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <style>
+        body { display: flex; align-items: center; justify-content: center; background: #F4F6F8; height: 100vh; }
+        .auth-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border: 1px solid #E2E8F0; }
+        .auth-logo { width: 120px; margin-bottom: 20px; }
+        .hidden { display: none; }
+        .link-text { color: #0077ff; cursor: pointer; text-decoration: underline; font-size: 0.9rem; }
+        .error-msg { color: #E76F51; font-size: 0.9rem; margin-top: 10px; min-height: 20px;}
+        .input-group input { width: 100%; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <img src="rakezgreytransparentcropped.png" alt="Rakez" class="auth-logo">
+        
+        <!-- LOGIN FORM -->
+        <div id="login-form">
+            <h2 style="color: #1D3557; margin-bottom: 20px;">Welcome Back</h2>
+            <div class="input-group" style="margin-bottom: 15px;">
+                <input type="email" id="login-email" placeholder="Email Address">
+            </div>
+            <div class="input-group" style="margin-bottom: 20px;">
+                <input type="password" id="login-password" placeholder="Password">
+            </div>
+            <button id="btn-login" class="btn-primary" style="width:100%; padding: 12px;">Log In</button>
+            <p class="error-msg" id="login-error"></p>
+            <p style="margin-top: 20px; color: #64748B; font-size: 0.9rem;">
+                New to Rakez? <span class="link-text" id="go-to-register">Create Account</span>
+            </p>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div id="register-form" class="hidden">
+            <h2 style="color: #1D3557; margin-bottom: 20px;">Create Account</h2>
+            <div class="input-group" style="margin-bottom: 15px;">
+                <input type="text" id="reg-name" placeholder="Full Name">
+            </div>
+            <div class="input-group" style="margin-bottom: 15px;">
+                <input type="email" id="reg-email" placeholder="Email Address">
+            </div>
+            <div class="input-group" style="margin-bottom: 20px;">
+                <input type="password" id="reg-password" placeholder="Password">
+            </div>
+            <button id="btn-register" class="btn-primary" style="width:100%; padding: 12px;">Sign Up</button>
+            <p class="error-msg" id="reg-error"></p>
+            <p style="margin-top: 20px; color: #64748B; font-size: 0.9rem;">
+                Already have an account? <span class="link-text" id="go-to-login">Log In</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="auth.js"></script>
+    <script>
+        // Toggle Forms
+        const loginForm = document.getElementById('login-form');
+        const regForm = document.getElementById('register-form');
+        
+        document.getElementById('go-to-register').onclick = () => { loginForm.classList.add('hidden'); regForm.classList.remove('hidden'); };
+        document.getElementById('go-to-login').onclick = () => { regForm.classList.add('hidden'); loginForm.classList.remove('hidden'); };
+
+        // Handle Register
+        document.getElementById('btn-register').onclick = async () => {
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-password').value;
+            
+            if(!name || !email || !pass) { document.getElementById('reg-error').textContent = "Please fill all fields."; return; }
+
+            const res = await registerUser(email, pass, name);
+            if(res.success) {
+                await loginUser(email, pass); // Auto login
+                window.location.href = 'options.html';
+            } else {
+                document.getElementById('reg-error').textContent = res.message;
+            }
+        };
+
+        // Handle Login
+        document.getElementById('btn-login').onclick = async () => {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            
+            const res = await loginUser(email, pass);
+            if(res.success) {
+                window.location.href = 'options.html';
+            } else {
+                document.getElementById('login-error').textContent = res.message;
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+/* --- FONTS --- */
+@import url('https://fonts.cdnfonts.com/css/cascadia-code');
+
+/* --- COLOR VARIABLES & SETTINGS --- */
+:root {
+    /* Font Variable */
+    --font-stack: 'Cascadia Code', 'Segoe UI', monospace;
+
+    /* Colors */
+    --navy-dark: #1A222E;
+    --navy-light: #243040;
+    --blue-main: #0077ff;
+    --blue-hover: #02438d;
+    --bg-grey: #F4F6F8;
+    --white: #FFFFFF;
+    --text-dark: #1D3557;
+    --text-grey: hsl(215, 16%, 47%);
+    --border: #E2E8F0;
+    --blue-light-bg: #E3F2FD;
+}
+
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    font-family: var(--font-stack); /* Applies Cascadia Code to all text and inputs */
+}
+
+body { background-color: var(--bg-grey); height: 100vh; overflow: hidden; }
+
+/* ... rest of your CSS ... */
+
+/* --- LAYOUT --- */
+.app-container { display: flex; height: 100vh; }
+
+/* --- SIDEBAR --- */
+.sidebar {
+    width: 260px;
+    background-color: var(--navy-dark);
+    color: var(--text-grey);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+/* SVG Logo Styling */
+.logo-area {
+    padding: 50px 0;
+    text-align: center;
+}
+.custom-logo {
+    width: 100px; /* Adjust width easily here */
+    height: auto;
+    color: var(--white); /* This makes the SVG white */
+    display: inline-block;
+}
+
+.nav-menu { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+.nav-item {
+    text-decoration: none;
+    color: #94A3B8;
+    padding: 10px 1px;
+    border-radius: 8px;
+    display: flex; align-items: center; gap: 12px;
+    transition: 0.2s;
+    font-size: 17px;
+}
+
+.nav-item:hover { background-color: rgba(255, 255, 255, 0.05); color: var(--white); }
+.nav-item.active { background-color: var(--navy-light); color: var(--blue-main); border-left: 3px solid var(--blue-main); }
+
+/* SVG Icon Logic */
+.nav-item svg {
+    width: 30px;
+    height: 30px;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
+/* --- MAIN CONTENT --- */
+.main-content { flex: 1; padding: 30px 40px; overflow-y: auto; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.user-welcome h1 { font-size: 1.5rem; color: var(--text-dark); }
+.user-welcome p { color: var(--text-grey); font-size: 0.9rem; }
+.top-actions { display: flex; gap: 20px; align-items: center; }
+
+.profile-pic {
+    width: 45px; height: 45px; 
+    background: var(--navy-dark);
+    color: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; 
+    font-weight: bold; border: 2px solid var(--border);
+}
+
+/* --- GENERIC CLASSES --- */
+.btn-primary {
+    background: var(--blue-main); color: white; border: none;
+    padding: 10px 25px; border-radius: 6px; font-weight: 600; cursor: pointer;
+}
+.card {
+    background: var(--white); border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    border: 1px solid var(--border);
+    padding: 20px;
+}
+.dashboard-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; }
+
+/* Keep specific component styles (Timeline, Vault, Quiz) from your original file below here */
+.intention-container { background: var(--white); padding: 20px; border-radius: 12px; margin-bottom: 25px; }
+.input-group { display: flex; gap: 10px; margin-bottom: 10px; }
+.input-group input { flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
